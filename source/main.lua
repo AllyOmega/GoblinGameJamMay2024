@@ -1,93 +1,116 @@
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
+import "CoreLibs/ui"
 
-local pd <const> = playdate
-local gfx <const> = pd.graphics
+local pd<const> = playdate
+local gfx<const> = pd.graphics
+local fillHeight = -20
+local fillIncr = -1
+local progressPercent = 10
+local score = 0
+local targetRangeMax = 55
+local targetRangeMin = 45
+local tickCount = 0
 
-local screenWidth, screenHeight = pd.display.getSize()
-local centerX, centerY = screenWidth / 2, screenHeight / 2
 
-local ballImageTable = gfx.imagetable.new('images/ball')
 
-local ballImages = {}
+function setupGame()
 
-for i = 1, #ballImageTable do 
-    ballImages[i] = ballImageTable[i]
+    -- local backgroundImage = gfx.image.new( "images/background" )
+    -- assert( backgroundImage )
+
+    -- gfx.sprite.setBackgroundDrawingCallback(
+    --     function( x, y, width, height )
+    --         gfx.setClipRect( x, y, width, height )
+    --         backgroundImage:draw( 0, 0 )
+    --         gfx.clearClipRect()
+    --     end
+    -- )
+
+    local font<const> = gfx.getFont()
+    local greeting<const> = "Hello, CuberPunk!"
+    local w<const> = font:getTextWidth(greeting)
+    local h<const> = font:getHeight()
+    local x<const> = (400 - w) / 2
+    local y<const> = (240 - h) / 2
+    gfx.drawText(greeting, x, y)
+
+    local progressImage = gfx.imagetable.new("images/progress-dither")
+    assert( progressImage )
+
+    infillSprite = gfx.sprite.new( progressImage[1] )
+    infillSprite:moveTo( 375, 120 )
+    infillSprite:add()
+
+    progressSprite = gfx.sprite.new( progressImage[3] )
+    progressSprite:moveTo( 375, 120  )
+	updateProgress()
+    progressSprite:add()
+
+    surroundSprite = gfx.sprite.new( progressImage[2] )
+    surroundSprite:moveTo( 375, 120  )
+    surroundSprite:add()
+
+    local arrowImg = gfx.image.new('images/arrow')
+    targetArrow = gfx.sprite.new(arrowImg)
+    assert( targetArrow )
+    targetArrow:moveTo(354,120)
+    targetArrow:add()
+
 end
 
-playdate.sound.micinput.startListening()
+function updateProgress()
+	progressSprite:setClipRect(progressSprite.x-progressSprite.width/2, progressSprite.y-progressPercent*2+progressSprite.height/2, progressSprite.width, progressPercent*2 )
+end
 
-local ballSprite = gfx.sprite.new()
-ballSprite:setImage(ballImages[1])
-ballSprite:moveTo(centerX, centerY)
-ballSprite:add()  -- Add the sprite to the sprite system
-ballSprite:setScale(2)
+function fillBar()
 
-local shakeTimer
+    progressPercent += (pd.getCrankChange()//9)
+	if progressPercent > 120 then
+        progressPercent = 120
+    end
+    if progressPercent <= 0 then
+        progressPercent = 0
+    end
+	updateProgress()
+    progressPercent -= (math.random(5,12)//2)
 
-local ballIter = 0
+end
+ function scoreUpdater()
 
-local function updateAnimationState()
-    local micLevel = playdate.sound.micinput.getLevel()
+    if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
 
-    print(micLevel)
-    -- Map the microphone input level to ballIter (1 to 4)
-
-    if ballIter < 4 then
-        if micLevel < 0.01 then
-            ballIter = 1
-        elseif micLevel < 0.03 then
-            ballIter = 2
-        elseif micLevel < 0.075 then
-            ballIter = 3
+        local median = ((targetRangeMin+targetRangeMax)//2)
+         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
+         if score >= 100 then
+            winState()
+         end 
+    else
+        if score >= 5 then
+            score -= 1
         else
-            ballIter = 4
+            score = 0
         end
     end
-    ballSprite:setImage(ballImages[ballIter])
 
-    -- Adjust the shaking speed based on ballIter
-    if ballIter == 2 then
-        shakeTimer.duration = 100  -- Shake every 100 ms
-    elseif ballIter == 3 then
-        shakeTimer.duration = 50  -- Shake every 50 ms
-    else
-        shakeTimer.duration = 5000  -- No shaking, set a large interval
-    end
-end
+ end
 
-local function shakeBall()
-    -- Apply shaking effect
-    if ballIter == 2 then
-        local shakeX = math.random(-5, 5)
-        local shakeY = math.random(-2, 2)
-        ballSprite:moveTo(centerX + shakeX, centerY + shakeY)
-    elseif ballIter == 3 then
-        local shakeX = math.random(-10, 10)
-        local shakeY = math.random(-4, 4)
-        ballSprite:moveTo(centerX + shakeX, centerY + shakeY)
-    else
-        ballSprite:moveTo(centerX, centerY)
-    end
-end
+ local tickTimer = pd.timer.new(50, scoreUpdater)
+ tickTimer.repeats = true
 
--- Create the shake timer
-shakeTimer = pd.timer.new(50, shakeBall)
-shakeTimer.repeats = true
+setupGame()
 
 function pd.update()
-    gfx.clear()
 
-    -- Update the animation state based on crank position
-    updateAnimationState()
-
-    -- Set color to black for drawing
-    gfx.setColor(gfx.kColorBlack)
-
+    fillBar()
     gfx.sprite.update()
-    pd.timer.updateTimers()
-
+    playdate.timer.updateTimers()
+    gfx.drawText(tostring(math.floor(score)), 0, 220)
     pd.drawFPS(0, 0)
+
+    if(pd.isCrankDocked()) then
+        pd.ui.crankIndicator:draw()
+    end
 end
 
 pd.start()
