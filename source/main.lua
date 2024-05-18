@@ -15,6 +15,7 @@ local targetRangeMin = 45
 local tickCount = 0
 
 
+
 function setupGame()
 
     -- local backgroundImage = gfx.image.new( "images/background" )
@@ -66,26 +67,27 @@ end
 
 function fillBar()
 
-    progressPercent += (pd.getCrankChange()//8)
-	if progressPercent > 120 or progressPercent <= 0 then progressPercent = 0 end
+    progressPercent += (pd.getCrankChange()//9)
+	if progressPercent > 120 then
+        progressPercent = 120
+    end
+    if progressPercent <= 0 then
+        progressPercent = 0
+    end
 	updateProgress()
-    progressPercent -= (math.random(5,10)//2)
+    progressPercent -= (math.random(5,12)//2)
 
 end
- function gameLoop()
+ function scoreUpdater()
 
-    if progressPercent > (targetRangeMin+2) and progressPercent < (targetRangeMax-2)  then
-        tickCount += 1
-        if tickCount >= 4 then
-            score += 2
-        end
-    elseif progressPercent > targetRangeMin and progressPercent < targetRangeMax then
-        tickCount += 1
-        if tickCount >= 3 then
-            score += 1
-        end
+    if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
+
+        local median = ((targetRangeMin+targetRangeMax)//2)
+         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
+         if score >= 100 then
+            winState()
+         end 
     else
-        tickCount = 0
         if score >= 5 then
             score -= 1
         else
@@ -95,17 +97,17 @@ end
 
  end
 
-
+ local tickTimer = pd.timer.new(50, scoreUpdater)
+ tickTimer.repeats = true
 
 setupGame()
 
 function pd.update()
 
     fillBar()
-    gameLoop()
     gfx.sprite.update()
     playdate.timer.updateTimers()
-    gfx.drawText(tostring(score), 0, 220)
+    gfx.drawText(tostring(math.floor(score)), 0, 220)
     pd.drawFPS(0, 0)
 
     if(pd.isCrankDocked()) then
