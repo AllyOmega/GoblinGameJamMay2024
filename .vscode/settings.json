@@ -1,4 +1,23 @@
 {
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "diagnostics.globals": ["import"],
+  "diagnostics.severity": {
+      "duplicate-set-field": "Hint"
+  },
+  "format.defaultConfig": {
+      "indent_style": "space",
+      "indent_size": "4"
+  },
+  "runtime.builtin": {
+      "io": "disable",
+      "os": "disable",
+      "package": "disable"
+  },
+  "runtime.nonstandardSymbol": ["+=", "-=", "*=", "/=", "//=", "%=", "<<=", ">>=", "&=", "|=", "^="],
+  "runtime.version": "Lua 5.4",
+  "workspace.library": [
+      "C:\\Users\\baseb\\OneDrive\\Documents\\Projects\\playdate-luacats"
+  ],
   // Point to the root PlaydateSDK so that auto-complete recommends paths prefixed with "CoreLibs/"
   "Lua.workspace.library": ["$PLAYDATE_SDK_PATH"],
   // Prevent the language server from indexing the Examples directories in the PlaydateSDK folder
@@ -21,4 +40,8 @@
   ],
   // Prevent the language server from linting the PlaydateSDK files
   "Lua.diagnostics.libraryFiles": "Disable"
+
+
+
+  
 }
