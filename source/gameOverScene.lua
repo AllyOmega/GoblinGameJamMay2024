@@ -10,7 +10,7 @@ gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameOverScene').extends(gfx.sprite)
 
-function GameOverScene:init()
+function GameOverScene:init(timeTotal)
 
     local text = "GAME OVER"
     local finalScore = 200
