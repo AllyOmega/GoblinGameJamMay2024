@@ -42,15 +42,15 @@ function GameTitleScene:init()
     gameTitleSprite2:add()
 
 
+    --local text2 = "PRESS A for CRANK or B for Mic"
     local text2 = "PRESS A"
     local gameTitleImage2 = gfx.image.new(gfx.getTextSize(text2))
     gfx.pushContext(gameTitleImage2)
-        -- gfx.setImageDrawMode(gfx.kDrawModeInverted)
         gfx.drawText(text2, 0, 0)
     gfx.popContext()
 
     local gameTitleSprite2 = gfx.sprite.new(gameTitleImage2)
-
+    gameTitleSprite2:setScale(.5)
     gameTitleSprite2:moveTo(200, 200)
     gameTitleSprite2:add()
 
