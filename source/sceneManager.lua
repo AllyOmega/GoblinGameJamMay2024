@@ -13,6 +13,8 @@ local sceneList = {"images/cup",
                     "images/mountain", 
                     "images/earth" }
 local iterator = 1
+local timeTotal = 0
+
 
 class('SceneManager').extends()
 
@@ -21,11 +23,12 @@ function SceneManager:init()
     self.transitioning = false
 end
 
-function SceneManager:switchScene()
+function SceneManager:switchScene(timeElapsed)
     if self.transitioning then
         return
     end
     self.transitioning = true
+    timeTotal += timeElapsed
     self:startTransition()
 end
 
@@ -74,7 +77,7 @@ function SceneManager:getNextScene()
         GameScene(sceneList[iterator])
         iterator +=  1
     else
-        GameOverScene()
+        GameOverScene(timeTotal)
         iterator = 0
     end
 end

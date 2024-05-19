@@ -115,7 +115,7 @@ function GameScene:update()
         gameTitleSprite3:setZIndex(10002)
         gameTitleSprite3:add()
         if pd.buttonJustPressed(pd.kButtonA) then
-            SCENE_MANAGER:switchScene(GameOverScene)
+            SCENE_MANAGER:switchScene(timeElapsed)
         end
     end
 end
