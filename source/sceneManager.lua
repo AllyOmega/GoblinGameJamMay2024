@@ -6,7 +6,12 @@ local gfx <const> = playdate.graphics
 local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
-local sceneList = {"images/cup", "images/ball"}
+local sceneList = {"images/cup", 
+                    "images/phone", 
+                    "images/tv", 
+                    "images/house", 
+                    "images/mountain", 
+                    "images/earth" }
 local iterator = 1
 
 class('SceneManager').extends()
