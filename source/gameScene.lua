@@ -7,21 +7,23 @@ local progressPercent = 10
 local targetRangeMax = 55
 local targetRangeMin = 45
 
-local itemBall
+local item
 local screenWidth, screenHeight = pd.display.getSize()
 local centerX, centerY = screenWidth / 2, screenHeight / 2
+local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 
+gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
-class('GameSceneBall').extends(gfx.sprite)
+class('GameScene').extends(gfx.sprite)
 
-function GameSceneBall:init()
+function GameScene:init(itemPath)
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
     -- end)
-    local scoreBall = 0
-    local tickTimer2 = pd.timer.new(50, self.scoreUpdaterBall)
-    tickTimer2.repeats = true
+    local score = 0
+    local tickTimer = pd.timer.new(50, self.scoreUpdater)
+    tickTimer.repeats = true
 
     local progressImage = gfx.imagetable.new("images/progress-dither")
     assert( progressImage )
@@ -44,16 +46,16 @@ function GameSceneBall:init()
     targetArrow:moveTo(354,120)
     targetArrow:add()
 
-    itemBall = Item(centerX, centerY, 'images/ball')
+    item = Item(centerX, centerY, itemPath)
 
     self:add()
 end
 
-function GameSceneBall:updateProgress()
+function GameScene:updateProgress()
 	progressSprite:setClipRect(progressSprite.x-progressSprite.width/2, progressSprite.y-progressPercent*2+progressSprite.height/2, progressSprite.width, progressPercent*2 )
 end
 
-function GameSceneBall:fillBar()
+function GameScene:fillBar()
     progressPercent += (pd.getCrankChange()//9)
 	if progressPercent > 120 then
         progressPercent = 120
@@ -65,25 +67,23 @@ function GameSceneBall:fillBar()
     progressPercent -= (math.random(5,12)//2)
 end
 
-function GameSceneBall:scoreUpdaterBall()
-    --print("In ScoreUpdater" .. tostring(progressPercent))
+function GameScene:scoreUpdater()
     if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
         local median = ((targetRangeMin+targetRangeMax)//2)
-         scoreBall += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
+         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
     else
-        if scoreBall >= 5 then
-            scoreBall -= 1
+        if score >= 5 then
+            score -= 1
         else
-            scoreBall = 0
+            score = 0
         end
     end
-    itemBall:updateAnimationState(scoreBall)
+    item:updateAnimationState(score)
 end
 
-function GameSceneBall:update()
+function GameScene:update()
     self:fillBar()
-    if scoreBall >= 100 then
-        scoreBall = 0
+    if score >= 100 then
         SCENE_MANAGER:switchScene(GameOverScene)
     end
 end

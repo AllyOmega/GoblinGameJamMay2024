@@ -34,15 +34,15 @@ function Item:init(x, y, itemPath)
 end
 
 function Item:updateAnimationState(score)
-        if score < 33 then
-            self.itemIter = 1
-        elseif score < 66 then
-            self.itemIter = 2
-        elseif score < 99 then
-            self.itemIter = 3
-        else
-            self.itemIter = 4
-        end
+    if score < 33 then
+        self.itemIter = 1
+    elseif score < 66 then
+        self.itemIter = 2
+    elseif score < 99 then
+        self.itemIter = 3
+    else
+        self.itemIter = 4
+    end
 
     self:setImage(self.itemImages[self.itemIter])
 
@@ -54,9 +54,6 @@ function Item:updateAnimationState(score)
     else
         self.shakeTimer.duration = 5000  -- No shaking, set a large interval
     end
-
-
-
 end
 
 function Item:shakeItem()
