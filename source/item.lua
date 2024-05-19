@@ -9,10 +9,10 @@ local gfx <const> = pd.graphics
 
 class('Item').extends(gfx.sprite)
 
-function Item:init(x, y)
+function Item:init(x, y, itemPath)
     Item.super.init(self)
 
-    self.itemImageTable = gfx.imagetable.new('images/ball')
+    self.itemImageTable = gfx.imagetable.new(itemPath)
     self.itemImages = {}
 
     for i = 1, #self.itemImageTable do
@@ -53,6 +53,12 @@ function Item:updateAnimationState(score)
     else
         self.shakeTimer.duration = 5000  -- No shaking, set a large interval
     end
+
+    if score >= 102 then
+        pd.wait(1000)
+        SCENE_MANAGER:switchScene(GameOverScene, tostring(score))
+    end
+
 end
 
 function Item:shakeItem()
