@@ -60,6 +60,6 @@ end
 
 function GameTitleScene:update()
     if pd.buttonJustPressed(pd.kButtonA) then
-        SCENE_MANAGER:switchScene()
+        SCENE_MANAGER:switchScene(0)
     end
 end

@@ -12,6 +12,9 @@ local screenWidth, screenHeight = pd.display.getSize()
 local centerX, centerY = screenWidth / 2, screenHeight / 2
 local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 
+local timeTimer
+local timeElapsed = 0
+
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameScene').extends(gfx.sprite)
@@ -24,6 +27,11 @@ function GameScene:init(itemPath)
     local score = 0
     local tickTimer = pd.timer.new(50, self.scoreUpdater)
     tickTimer.repeats = true
+
+    timeTimer = pd.timer.new(1000, self.timeUpdater)
+    timeTimer.repeats = true
+    
+
 
     local progressImage = gfx.imagetable.new("images/progress-dither")
     assert( progressImage )
@@ -49,6 +57,12 @@ function GameScene:init(itemPath)
     item = Item(centerX, centerY, itemPath)
 
     self:add()
+end
+
+function GameScene:timeUpdater()
+    timeElapsed += 1
+
+    print("timeTimer: " .. tostring(timeElapsed))
 end
 
 function GameScene:updateProgress()
@@ -84,6 +98,8 @@ end
 function GameScene:update()
     self:fillBar()
     if score >= 100 then
+        timeTimer:pause()
+        print("time before: " .. tostring(timeElapsed))
         score =  200
         local text1 = "GET"
         local gameTitleImage1 = gfx.image.new(gfx.getTextSize(text1))
@@ -114,6 +130,8 @@ function GameScene:update()
         gameTitleSprite3:moveTo(200, 200)
         gameTitleSprite3:setZIndex(10002)
         gameTitleSprite3:add()
+        print("time after: " .. tostring(timeElapsed))
+
         if pd.buttonJustPressed(pd.kButtonA) then
             SCENE_MANAGER:switchScene(timeElapsed)
         end

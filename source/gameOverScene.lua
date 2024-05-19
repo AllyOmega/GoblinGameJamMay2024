@@ -4,23 +4,24 @@ import "gameScene"
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
+
 local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameOverScene').extends(gfx.sprite)
 
-function GameOverScene:init(timeTotal)
+function GameOverScene:init(timeElapsed)
 
     local text = "GAME OVER"
-    local finalScore = 200
+     
     local gameOverImage = gfx.image.new(gfx.getTextSize(text))
-    local finalScoreImage = gfx.image.new(gfx.getTextSize(finalScore))
+    local finalScoreImage = gfx.image.new(gfx.getTextSize(tostring(timeElapsed)))
     gfx.pushContext(gameOverImage)
         gfx.drawText(text, 0, 0)
     gfx.popContext()
     gfx.pushContext(finalScoreImage)
-        gfx.drawText(finalScore, 0, 0)
+        gfx.drawText(timeElapsed, 0, 0)
     gfx.popContext()
 
     local gameOverSprite = gfx.sprite.new(gameOverImage)

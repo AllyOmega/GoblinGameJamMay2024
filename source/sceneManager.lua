@@ -13,7 +13,6 @@ local sceneList = {"images/cup",
                     "images/mountain", 
                     "images/earth" }
 local iterator = 1
-local timeTotal = 0
 
 
 class('SceneManager').extends()
@@ -28,18 +27,17 @@ function SceneManager:switchScene(timeElapsed)
         return
     end
     self.transitioning = true
-    timeTotal += timeElapsed
-    self:startTransition()
+    self:startTransition(timeElapsed)
 end
 
-function SceneManager:loadNewScene()
-    self:cleanupScene()
+function SceneManager:loadNewScene(timeElapsed)
+    self:cleanupScene(timeElapsed)
 end
 
-function SceneManager:startTransition()
+function SceneManager:startTransition(timeElapsed)
     local transitionTimer = self:wipeTransition(0, 400)
     transitionTimer.timerEndedCallback = function()
-        self:loadNewScene()
+        self:loadNewScene(timeElapsed)
         transitionTimer = self:wipeTransition(400, 0)
         transitionTimer.timerEndedCallback = function()
             self.transitioning = false
@@ -69,7 +67,7 @@ function SceneManager:createTransitionSprite()
     return transitionSprite
 end
 
-function SceneManager:getNextScene()
+function SceneManager:getNextScene(timeElapsed)
     if iterator == 0 then
         GameTitleScene()
         iterator += 1
@@ -77,16 +75,16 @@ function SceneManager:getNextScene()
         GameScene(sceneList[iterator])
         iterator +=  1
     else
-        GameOverScene(timeTotal)
+        GameOverScene(timeElapsed)
         iterator = 0
     end
 end
 
-function SceneManager:cleanupScene()
+function SceneManager:cleanupScene(timeElapsed)
     gfx.sprite.removeAll()
     self:removeAllTimers()
     gfx.setDrawOffset(0,0)
-    self:getNextScene()
+    self:getNextScene(timeElapsed)
 end
 
 function SceneManager:removeAllTimers()
