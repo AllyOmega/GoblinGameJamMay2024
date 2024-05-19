@@ -64,7 +64,7 @@ function GameScene:fillBar()
         progressPercent = 0
     end
 	self:updateProgress()
-    progressPercent -= (math.random(5,12)//2)
+    --progressPercent -= (math.random(5,12)//2)
 end
 
 function GameScene:scoreUpdater()
@@ -84,6 +84,38 @@ end
 function GameScene:update()
     self:fillBar()
     if score >= 100 then
-        SCENE_MANAGER:switchScene(GameOverScene)
+        score =  200
+        local text1 = "GET"
+        local gameTitleImage1 = gfx.image.new(gfx.getTextSize(text1))
+        gfx.pushContext(gameTitleImage1)
+            gfx.drawText(text1, 0, 0)
+        gfx.popContext()
+        local gameTitleSprite1 = gfx.sprite.new(gameTitleImage1)
+        gameTitleSprite1:moveTo(200, 30)
+        gameTitleSprite1:setZIndex(10001)
+        gameTitleSprite1:add()
+    
+        local text2 = "FRACKED"
+        local gameTitleImage2 = gfx.image.new(gfx.getTextSize(text2))
+        gfx.pushContext(gameTitleImage2)
+            gfx.drawText(text2, 0, 0)
+        gfx.popContext()
+        local gameTitleSprite2 = gfx.sprite.new(gameTitleImage2)
+        gameTitleSprite2:moveTo(200, 80)
+        gameTitleSprite2:setZIndex(10002)
+        gameTitleSprite2:add()
+
+        local text3 = "Press A"
+        local gameTitleImage3 = gfx.image.new(gfx.getTextSize(text3))
+        gfx.pushContext(gameTitleImage3)
+            gfx.drawText(text3, 0, 0)
+        gfx.popContext()
+        local gameTitleSprite3 = gfx.sprite.new(gameTitleImage3)
+        gameTitleSprite3:moveTo(200, 200)
+        gameTitleSprite3:setZIndex(10002)
+        gameTitleSprite3:add()
+        if pd.buttonJustPressed(pd.kButtonA) then
+            SCENE_MANAGER:switchScene(GameOverScene)
+        end
     end
 end

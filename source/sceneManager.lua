@@ -3,6 +3,9 @@ import "gameScene"
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
+local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
+gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
+
 local sceneList = {"images/cup", "images/ball"}
 local iterator = 1
 
@@ -54,6 +57,7 @@ function SceneManager:createTransitionSprite()
     transitionSprite:setZIndex(10000)
     transitionSprite:setIgnoresDrawOffset(true)
     transitionSprite:add()
+
     return transitionSprite
 end
 
