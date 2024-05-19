@@ -1,6 +1,8 @@
 import "CoreLibs/graphics"
 import "CoreLibs/timer"
 import "CoreLibs/ui"
+import "CoreLibs/object"
+import "item"
 
 local pd<const> = playdate
 local gfx<const> = pd.graphics
@@ -12,20 +14,15 @@ local targetRangeMax = 55
 local targetRangeMin = 45
 local tickCount = 0
 
+local screenWidth, screenHeight = pd.display.getSize()
+local centerX, centerY = screenWidth / 2, screenHeight / 2
 
+playdate.sound.micinput.startListening()
 
-function setupGame()
+local micLevel = playdate.sound.micinput.getLevel()
 
-    -- local backgroundImage = gfx.image.new( "images/background" )
-    -- assert( backgroundImage )
-
-    -- gfx.sprite.setBackgroundDrawingCallback(
-    --     function( x, y, width, height )
-    --         gfx.setClipRect( x, y, width, height )
-    --         backgroundImage:draw( 0, 0 )
-    --         gfx.clearClipRect()
-    --     end
-    -- )
+local function setupGame()
+    local item = Item(centerX, centerY)
 
     local font<const> = gfx.getFont()
     local greeting<const> = "Hello, CuberPunk!"
@@ -36,81 +33,72 @@ function setupGame()
     gfx.drawText(greeting, x, y)
 
     local progressImage = gfx.imagetable.new("images/progress-dither")
-    assert( progressImage )
+    assert(progressImage)
 
-    infillSprite = gfx.sprite.new( progressImage[1] )
-    infillSprite:moveTo( 375, 120 )
+    local infillSprite = gfx.sprite.new(progressImage[1])
+    infillSprite:moveTo(375, 120)
     infillSprite:add()
 
-    progressSprite = gfx.sprite.new( progressImage[3] )
-    progressSprite:moveTo( 375, 120  )
-	updateProgress()
+    local progressSprite = gfx.sprite.new(progressImage[3])
+    progressSprite:moveTo(375, 120)
     progressSprite:add()
 
-    surroundSprite = gfx.sprite.new( progressImage[2] )
-    surroundSprite:moveTo( 375, 120  )
+    local surroundSprite = gfx.sprite.new(progressImage[2])
+    surroundSprite:moveTo(375, 120)
     surroundSprite:add()
 
     local arrowImg = gfx.image.new('images/arrow')
-    targetArrow = gfx.sprite.new(arrowImg)
-    assert( targetArrow )
-    targetArrow:moveTo(354,120)
+    local targetArrow = gfx.sprite.new(arrowImg)
+    assert(targetArrow)
+    targetArrow:moveTo(354, 120)
     targetArrow:add()
 
-end
-
-function updateProgress()
-	progressSprite:setClipRect(progressSprite.x-progressSprite.width/2, progressSprite.y-progressPercent*2+progressSprite.height/2, progressSprite.width, progressPercent*2 )
-end
-
-function fillBar()
-
-    progressPercent += (pd.getCrankChange()//9)
-	if progressPercent > 120 then
-        progressPercent = 120
+    local function updateProgress(sprite)
+        sprite:setClipRect(sprite.x - sprite.width / 2, sprite.y - progressPercent * 2 + sprite.height / 2, sprite.width, progressPercent * 2)
     end
-    if progressPercent <= 0 then
-        progressPercent = 0
+
+    local function fillBar()
+        progressPercent += pd.getCrankChange() // 9
+        if progressPercent > 120 then
+            progressPercent = 120
+        end
+        if progressPercent <= 0 then
+            progressPercent = 0
+        end
+        updateProgress(progressSprite)
+        progressPercent -= (math.random(5, 12) // 2)
     end
-	updateProgress()
-    progressPercent -= (math.random(5,12)//2)
 
-end
- function scoreUpdater()
-
-    if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
-
-        local median = ((targetRangeMin+targetRangeMax)//2)
-         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
-         if score >= 100 then
-            winState()
-         end 
-    else
-        if score >= 5 then
-            score -= 1
+    local function scoreUpdater()
+        if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
+            local median = ((targetRangeMin + targetRangeMax) // 2)
+            score += (median - targetRangeMin) - math.abs(median - progressPercent)
         else
-            score = 0
+            if score >= 5 then
+                score -= 1
+            else
+                score = 0
+            end
+        end
+
+        item:updateAnimationState(score)
+    end
+
+    local tickTimer = pd.timer.new(50, scoreUpdater)
+    tickTimer.repeats = true
+
+    function pd.update()
+        fillBar()
+        gfx.sprite.update()
+        playdate.timer.updateTimers()
+        gfx.drawText(tostring(math.floor(score)), 0, 220)
+        pd.drawFPS(0, 0)
+
+        if (pd.isCrankDocked()) then
+            pd.ui.crankIndicator:draw()
         end
     end
-
- end
-
- local tickTimer = pd.timer.new(50, scoreUpdater)
- tickTimer.repeats = true
-
-setupGame()
-
-function pd.update()
-
-    fillBar()
-    gfx.sprite.update()
-    playdate.timer.updateTimers()
-    gfx.drawText(tostring(math.floor(score)), 0, 220)
-    pd.drawFPS(0, 0)
-
-    if(pd.isCrankDocked()) then
-        pd.ui.crankIndicator:draw()
-    end
 end
 
+setupGame()
 pd.start()
