@@ -85,7 +85,7 @@ function GameScene:fillBar()
         progressPercent = 0
     end
 	self:updateProgress()
-    --progressPercent -= (math.random(5,12)//2)
+    progressPercent -= (math.random(5,12)//2)
 end
 
 function GameScene:scoreUpdater()
