@@ -1,4 +1,6 @@
-import "gameScene"
+import "gameTitleScene"
+import "gameSceneBall"
+import "gameSceneCup"
 
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
@@ -6,10 +8,10 @@ local gfx <const> = playdate.graphics
 
 class('GameOverScene').extends(gfx.sprite)
 
-function GameOverScene:init(score)
+function GameOverScene:init()
 
     local text = "GAME OVER"
-    local finalScore = score
+    local finalScore = 200
     local gameOverImage = gfx.image.new(gfx.getTextSize(text))
     local finalScoreImage = gfx.image.new(gfx.getTextSize(finalScore))
     gfx.pushContext(gameOverImage)
@@ -34,6 +36,8 @@ end
 
 function GameOverScene:update()
     if pd.buttonJustPressed(pd.kButtonA) then
-        SCENE_MANAGER:switchScene(GameScene)
+
+        SCENE_MANAGER:switchScene(GameTitleScene)
+
     end
 end
