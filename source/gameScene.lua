@@ -30,7 +30,8 @@ function GameScene:init(itemPath, rangeMin, rangeMax)
 
     timeTimer = pd.timer.new(1000, self.timeUpdater)
     timeTimer.repeats = true
-    
+
+    local offset = math.random(-25,25)
 
 
     local progressImage = gfx.imagetable.new("images/progress-dither")
@@ -51,14 +52,13 @@ function GameScene:init(itemPath, rangeMin, rangeMax)
     local arrowImg = gfx.image.new('images/arrow')
     targetArrow = gfx.sprite.new(arrowImg)
     assert( targetArrow )
-
-    targetArrow:moveTo(354,120)
+    targetArrow:moveTo(354,(120-offset))
     targetArrow:add()
 
     item = Item(centerX+20, centerY+15, itemPath)
 
-    targetRangeMin = rangeMin
-    targetRangeMax = rangeMax
+    targetRangeMin = rangeMin + offset
+    targetRangeMax = rangeMax + offset
 
     self:add()
 end
@@ -88,7 +88,8 @@ end
 function GameScene:scoreUpdater()
     if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
         local median = ((targetRangeMin+targetRangeMax)//2)
-         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
+        if median - targetRangeMin < 10
+        score += 7
     else
         if score >= 5 then
             score -= 1
