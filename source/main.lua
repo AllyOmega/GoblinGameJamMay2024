@@ -1,4 +1,6 @@
+import "CoreLibs/object"
 import "CoreLibs/graphics"
+import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/ui"
 
@@ -21,6 +23,3 @@ function pd.update()
         pd.ui.crankIndicator:draw()
     end
 end
-
-setupGame()
-pd.start()
