@@ -53,9 +53,7 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     local arrowImg = gfx.image.new('images/arrow')
     targetArrow = gfx.sprite.new(arrowImg)
     assert( targetArrow )
-        targetArrow:moveTo(354,(120-(offset*2)))
-
-
+    targetArrow:moveTo(354,(120-(offset*2)))
     targetArrow:add()
 
     item = Item(centerX+20, centerY+15, itemPath, self.scoreGoal)
