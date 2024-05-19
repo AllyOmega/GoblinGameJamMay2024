@@ -8,6 +8,10 @@ local score = 0
 local targetRangeMax = 55
 local targetRangeMin = 45
 
+local item
+local screenWidth, screenHeight = pd.display.getSize()
+local centerX, centerY = screenWidth / 2, screenHeight / 2
+
 class('GameScene').extends(gfx.sprite)
 
 function GameScene:init()
@@ -38,6 +42,8 @@ function GameScene:init()
     assert( targetArrow )
     targetArrow:moveTo(354,120)
     targetArrow:add()
+
+    item = Item(centerX, centerY, 'images/ball')
 
     self:add()
 end
@@ -72,15 +78,14 @@ function scoreUpdater()
             score = 0
         end
     end
-
+    item:updateAnimationState(score)
 end
 
 function GameScene:update()
     fillBar()
-    --pd.timer.updateTimers()
     local tempScore = tostring(math.floor(score))
     print(tempScore)
-    if pd.buttonJustPressed(pd.kButtonA) then
-        SCENE_MANAGER:switchScene(GameOverScene, tempScore)
-    end
+    -- if score >= 100 then
+    --     SCENE_MANAGER:switchScene(GameOverScene, tempScore)
+    -- end
 end

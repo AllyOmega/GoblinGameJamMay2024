@@ -6,6 +6,7 @@ import "CoreLibs/ui"
 
 import "sceneManager"
 import "gameScene"
+import "item"
 
 SCENE_MANAGER = SceneManager()
 

@@ -10,7 +10,6 @@ function SceneManager:switchScene(scene, ...)
     self:loadNewScene()
 end
 
-
 function SceneManager:loadNewScene()
     self:cleanupScene()
 end
@@ -21,7 +20,6 @@ function SceneManager:cleanupScene()
     gfx.setDrawOffset(0,0)
     self.newScene(self.sceneArgs)
 end
-
 
 function SceneManager:removeAllTimers()
     local allTimers = pd.timer.allTimers()
