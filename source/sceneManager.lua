@@ -7,12 +7,12 @@ local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 local sceneList = {
-                    ["images/cup"] = {30, 70},
-                    ["images/phone"] = {35, 65} ,
-                    ["images/tv"] = {40, 60},
-                    ["images/house"] = {42, 58},
-                    ["images/mountain"] = {44, 56},
-                    ["images/earth"] = {48, 54}}
+                    ["images/cup"] = {30, 70, 100},
+                    ["images/phone"] = {35, 65, 125} ,
+                    ["images/tv"] = {40, 60, 150},
+                    ["images/house"] = {42, 58, 175},
+                    ["images/mountain"] = {44, 56, 200},
+                    ["images/earth"] = {48, 54, 250}}
 local iterator = 1
 
 local sceneKeys = {"images/cup", "images/phone", "images/tv", "images/house", "images/mountain", "images/earth"}
@@ -90,9 +90,10 @@ function SceneManager:getNextScene(timeElapsed)
         end
         table.sort(keys) -- Ensure consistent order if needed
         local sceneKey = sceneKeys[iterator]
-        local value1 = sceneList[sceneKey][1]
-        local value2 = sceneList[sceneKey][2]
-        GameScene(sceneKey, value1, value2)
+        local minRange = sceneList[sceneKey][1]
+        local maxRange = sceneList[sceneKey][2]
+        local scoreGoal = sceneList[sceneKey[3]]
+        GameScene(sceneKey, minRange, maxRange, scoreGoal)
         iterator +=  1
     else
         GameOverScene(timeElapsed)
