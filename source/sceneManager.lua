@@ -6,16 +6,27 @@ local gfx <const> = playdate.graphics
 local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
-local sceneList = {"images/cup", 
-                    "images/phone", 
-                    "images/tv", 
-                    "images/house", 
-                    "images/mountain", 
-                    "images/earth" }
+local sceneList = {
+                    ["images/cup"] = {30, 70}, 
+                    ["images/phone"] = {35, 65} , 
+                    ["images/tv"] = {40, 60}, 
+                    ["images/house"] = {42, 58}, 
+                    ["images/mountain"] = {44, 56}, 
+                    ["images/earth"] = {47, 53}}
 local iterator = 1
+
+local sceneKeys = {"images/cup", "images/phone", "images/tv", "images/house", "images/mountain", "images/earth"}
 
 
 class('SceneManager').extends()
+
+function SceneManager:countElements(tbl)
+    local count = 0
+    for _ in pairs(tbl) do
+        count = count + 1
+    end
+    return count
+end
 
 function SceneManager:init()
     self.transistionTime = 750
@@ -68,11 +79,20 @@ function SceneManager:createTransitionSprite()
 end
 
 function SceneManager:getNextScene(timeElapsed)
+
     if iterator == 0 then
         GameTitleScene()
         iterator += 1
-    elseif iterator <= #sceneList then
-        GameScene(sceneList[iterator])
+    elseif iterator <= self:countElements(sceneList) then
+        local keys = {}
+        for k in pairs(sceneList) do
+            table.insert(keys, k)
+        end
+        table.sort(keys) -- Ensure consistent order if needed
+        local sceneKey = sceneKeys[iterator]
+        local value1 = sceneList[sceneKey][1]
+        local value2 = sceneList[sceneKey][2]
+        GameScene(sceneKey, value1, value2)
         iterator +=  1
     else
         GameOverScene(timeElapsed)
