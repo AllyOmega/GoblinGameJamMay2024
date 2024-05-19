@@ -1,5 +1,13 @@
+import "gameScene"
+
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
+
+local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
+gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
+
+local sceneList = {"images/cup", "images/ball"}
+local iterator = 1
 
 class('SceneManager').extends()
 
@@ -8,13 +16,11 @@ function SceneManager:init()
     self.transitioning = false
 end
 
-function SceneManager:switchScene(scene, ...)
+function SceneManager:switchScene()
     if self.transitioning then
         return
     end
     self.transitioning = true
-    self.newScene = scene
-    self.sceneArgs = ...
     self:startTransition()
 end
 
@@ -51,14 +57,28 @@ function SceneManager:createTransitionSprite()
     transitionSprite:setZIndex(10000)
     transitionSprite:setIgnoresDrawOffset(true)
     transitionSprite:add()
+
     return transitionSprite
+end
+
+function SceneManager:getNextScene()
+    if iterator == 0 then
+        GameTitleScene()
+        iterator += 1
+    elseif iterator <= #sceneList then
+        GameScene(sceneList[iterator])
+        iterator +=  1
+    else
+        GameOverScene()
+        iterator = 0
+    end
 end
 
 function SceneManager:cleanupScene()
     gfx.sprite.removeAll()
     self:removeAllTimers()
     gfx.setDrawOffset(0,0)
-    self.newScene(self.sceneArgs)
+    self:getNextScene()
 end
 
 function SceneManager:removeAllTimers()

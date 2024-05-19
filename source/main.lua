@@ -15,7 +15,6 @@ GameTitleScene()
 local pd<const> = playdate
 local gfx<const> = pd.graphics
 
-pd.setCollectsGarbage(false)
 
 function pd.update()
     pd.timer.updateTimers()

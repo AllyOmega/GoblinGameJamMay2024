@@ -6,7 +6,6 @@ local gfx <const> = playdate.graphics
 local progressPercent = 10
 local targetRangeMax = 55
 local targetRangeMin = 45
-local scoreBall = 0
 
 local itemBall
 local screenWidth, screenHeight = pd.display.getSize()
@@ -15,12 +14,12 @@ local centerX, centerY = screenWidth / 2, screenHeight / 2
 
 class('GameSceneBall').extends(gfx.sprite)
 
-function GameSceneBall:init(scoreBall)
+function GameSceneBall:init()
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
     -- end)
-    scoreBall = score
+    local scoreBall = 0
     local tickTimer2 = pd.timer.new(50, self.scoreUpdaterBall)
     tickTimer2.repeats = true
 
@@ -83,9 +82,8 @@ end
 
 function GameSceneBall:update()
     self:fillBar()
-    --local tempScore = tostring(math.floor(scoreBall))
-    --print(scoreBall)
     if scoreBall >= 100 then
+        scoreBall = 0
         SCENE_MANAGER:switchScene(GameOverScene)
     end
 end

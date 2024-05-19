@@ -1,10 +1,12 @@
 import "gameTitleScene"
-import "gameSceneBall"
-import "gameSceneCup"
+import "gameScene"
 
 local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
+local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
+
+gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameOverScene').extends(gfx.sprite)
 

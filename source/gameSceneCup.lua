@@ -4,7 +4,6 @@ local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
 local progressPercent = 10
-local scoreCup = 0
 local targetRangeMax = 55
 local targetRangeMin = 45
 
@@ -15,12 +14,12 @@ local centerX, centerY = screenWidth / 2, screenHeight / 2
 
 class('GameSceneCup').extends(gfx.sprite)
 
-function GameSceneCup:init(scoreCup)
+function GameSceneCup:init()
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
     -- end)
-    scoreCup = 0
+    local scoreCup = 0
     local tickTimer = pd.timer.new(50, self.scoreUpdater)
     tickTimer.repeats = true
 
@@ -83,6 +82,6 @@ end
 function GameSceneCup:update()
     self:fillBar()
     if scoreCup >= 100 then
-        SCENE_MANAGER:switchScene(GameSceneBall, 0)
+        SCENE_MANAGER:switchScene(GameSceneBall)
     end
 end
