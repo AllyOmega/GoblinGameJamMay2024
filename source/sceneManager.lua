@@ -92,7 +92,7 @@ function SceneManager:getNextScene(timeElapsed)
         local sceneKey = sceneKeys[iterator]
         local minRange = sceneList[sceneKey][1]
         local maxRange = sceneList[sceneKey][2]
-        local scoreGoal = sceneList[sceneKey[3]]
+        local scoreGoal = sceneList[sceneKey][3]
         GameScene(sceneKey, minRange, maxRange, scoreGoal)
         iterator +=  1
     else

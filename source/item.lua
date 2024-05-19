@@ -9,7 +9,7 @@ local gfx <const> = pd.graphics
 
 class('Item').extends(gfx.sprite)
 
-function Item:init(x, y, itemPath)
+function Item:init(x, y, itemPath, goal)
     Item.super.init(self)
 
     score = 0
@@ -28,17 +28,17 @@ function Item:init(x, y, itemPath)
     self.centerX = x
     self.centerY = y
     self.itemIter = 1
-
+    self.scoreGoal = goal
     self.shakeTimer = pd.timer.new(50, function() self:shakeItem() end)
     self.shakeTimer.repeats = true
 end
 
 function Item:updateAnimationState(score)
-    if score < 33 then
+    if score < self.scoreGoal/4 then
         self.itemIter = 1
-    elseif score < 66 then
+    elseif score < self.scoreGoal*(2/3) then
         self.itemIter = 2
-    elseif score < 99 then
+    elseif score < self.scoreGoal - 1 then
         self.itemIter = 3
     else
         self.itemIter = 4
