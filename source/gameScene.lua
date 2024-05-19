@@ -19,7 +19,7 @@ gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameScene').extends(gfx.sprite)
 
-function GameScene:init(itemPath)
+function GameScene:init(itemPath, rangeMin, rangeMax)
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
@@ -57,6 +57,9 @@ function GameScene:init(itemPath)
 
     item = Item(centerX+20, centerY+15, itemPath)
 
+    targetRangeMin = rangeMin
+    targetRangeMax = rangeMax
+
     self:add()
 end
 
@@ -79,7 +82,7 @@ function GameScene:fillBar()
         progressPercent = 0
     end
 	self:updateProgress()
-    --progressPercent -= (math.random(5,12)//2)
+    progressPercent -= (math.random(5,12)//2)
 end
 
 function GameScene:scoreUpdater()
