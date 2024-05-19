@@ -53,7 +53,7 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     local arrowImg = gfx.image.new('images/arrow')
     targetArrow = gfx.sprite.new(arrowImg)
     assert( targetArrow )
-    targetArrow:moveTo(354,(120-offset))
+    targetArrow:moveTo(354,(120-(offset*1.6)))
     targetArrow:add()
 
     item = Item(centerX+20, centerY+15, itemPath, self.scoreGoal)
@@ -83,7 +83,7 @@ function GameScene:fillBar()
         progressPercent = 0
     end
 	self:updateProgress()
-    progressPercent -= (math.random(5,12)//2)
+    --progressPercent -= (math.random(5,12)//2)
 end
 
 function GameScene:scoreUpdater()
@@ -91,7 +91,7 @@ function GameScene:scoreUpdater()
         score += 4
     else
         if score >= 5 then
-            score -= 1
+           --score -= 1
         else
             score = 0
         end
