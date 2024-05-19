@@ -4,23 +4,25 @@ local pd <const> = playdate
 local gfx <const> = playdate.graphics
 
 local progressPercent = 10
-local score = 0
 local targetRangeMax = 55
 local targetRangeMin = 45
+local scoreBall = 0
 
-local item
+local itemBall
 local screenWidth, screenHeight = pd.display.getSize()
 local centerX, centerY = screenWidth / 2, screenHeight / 2
 
-class('GameScene').extends(gfx.sprite)
 
-function GameScene:init()
+class('GameSceneBall').extends(gfx.sprite)
+
+function GameSceneBall:init(scoreBall)
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
     -- end)
-    local tickTimer = pd.timer.new(50, scoreUpdater)
-    tickTimer.repeats = true  
+    scoreBall = score
+    local tickTimer2 = pd.timer.new(50, self.scoreUpdaterBall)
+    tickTimer2.repeats = true
 
     local progressImage = gfx.imagetable.new("images/progress-dither")
     assert( progressImage )
@@ -43,17 +45,16 @@ function GameScene:init()
     targetArrow:moveTo(354,120)
     targetArrow:add()
 
-    item = Item(centerX, centerY, 'images/ball')
+    itemBall = Item(centerX, centerY, 'images/ball')
 
     self:add()
 end
 
-function updateProgress()
+function GameSceneBall:updateProgress()
 	progressSprite:setClipRect(progressSprite.x-progressSprite.width/2, progressSprite.y-progressPercent*2+progressSprite.height/2, progressSprite.width, progressPercent*2 )
 end
 
-function fillBar()
-
+function GameSceneBall:fillBar()
     progressPercent += (pd.getCrankChange()//9)
 	if progressPercent > 120 then
         progressPercent = 120
@@ -61,31 +62,30 @@ function fillBar()
     if progressPercent <= 0 then
         progressPercent = 0
     end
-	updateProgress()
+	self:updateProgress()
     progressPercent -= (math.random(5,12)//2)
-
 end
 
-function scoreUpdater()
-
+function GameSceneBall:scoreUpdaterBall()
+    --print("In ScoreUpdater" .. tostring(progressPercent))
     if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
         local median = ((targetRangeMin+targetRangeMax)//2)
-         score += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
+         scoreBall += (median - targetRangeMin) - math.abs(median-progressPercent) --copy idea for dec score?
     else
-        if score >= 5 then
-            score -= 1
+        if scoreBall >= 5 then
+            scoreBall -= 1
         else
-            score = 0
+            scoreBall = 0
         end
     end
-    item:updateAnimationState(score)
+    itemBall:updateAnimationState(scoreBall)
 end
 
-function GameScene:update()
-    fillBar()
-    local tempScore = tostring(math.floor(score))
-    print(tempScore)
-    -- if score >= 100 then
-    --     SCENE_MANAGER:switchScene(GameOverScene, tempScore)
-    -- end
+function GameSceneBall:update()
+    self:fillBar()
+    --local tempScore = tostring(math.floor(scoreBall))
+    --print(scoreBall)
+    if scoreBall >= 100 then
+        SCENE_MANAGER:switchScene(GameOverScene)
+    end
 end

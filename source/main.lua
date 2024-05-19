@@ -5,15 +5,17 @@ import "CoreLibs/timer"
 import "CoreLibs/ui"
 
 import "sceneManager"
-import "gameScene"
+import "gameTitleScene"
 import "item"
 
 SCENE_MANAGER = SceneManager()
 
-GameScene()
+GameTitleScene()
 
 local pd<const> = playdate
 local gfx<const> = pd.graphics
+
+pd.setCollectsGarbage(false)
 
 function pd.update()
     pd.timer.updateTimers()

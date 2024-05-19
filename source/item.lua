@@ -12,6 +12,7 @@ class('Item').extends(gfx.sprite)
 function Item:init(x, y, itemPath)
     Item.super.init(self)
 
+    score = 0
     self.itemImageTable = gfx.imagetable.new(itemPath)
     self.itemImages = {}
 
@@ -54,10 +55,7 @@ function Item:updateAnimationState(score)
         self.shakeTimer.duration = 5000  -- No shaking, set a large interval
     end
 
-    if score >= 102 then
-        pd.wait(1000)
-        SCENE_MANAGER:switchScene(GameOverScene, tostring(score))
-    end
+
 
 end
 
