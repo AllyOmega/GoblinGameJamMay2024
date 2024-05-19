@@ -19,7 +19,7 @@ gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 class('GameScene').extends(gfx.sprite)
 
-function GameScene:init(itemPath, rangeMin, rangeMax)
+function GameScene:init(itemPath, rangeMin, rangeMax, scoreGoal)
     -- local backgroundImage = gfx.image.new("images/background")
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
@@ -87,9 +87,7 @@ end
 
 function GameScene:scoreUpdater()
     if progressPercent > targetRangeMin and progressPercent < targetRangeMax then
-        local median = ((targetRangeMin+targetRangeMax)//2)
-        if median - targetRangeMin < 10
-        score += 7
+        score += 4
     else
         if score >= 5 then
             score -= 1
@@ -102,10 +100,10 @@ end
 
 function GameScene:update()
     self:fillBar()
-    if score >= 100 then
+    if score >= scoreGoal then
         timeTimer:pause()
         --print("time before: " .. tostring(timeElapsed))
-       if score <= 110 then
+       if score <= (scoreGoal + 10) then
             local text1 = "GET Fracked"
             local gameTitleImage1 = gfx.image.new(gfx.getTextSize(text1))
             gfx.pushContext(gameTitleImage1)
@@ -128,7 +126,7 @@ function GameScene:update()
             gameTitleSprite3:add()
             --print("time after: " .. tostring(timeElapsed))
        end
-       score =  200
+       score =  scoreGoal + 1000
        if pd.buttonJustPressed(pd.kButtonA) then
            SCENE_MANAGER:switchScene(timeElapsed)
        end
