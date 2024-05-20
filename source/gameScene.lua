@@ -14,6 +14,7 @@ local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 
 local timeTimer
 local timeElapsed = 0
+local offset
 
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
@@ -24,6 +25,8 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     -- gfx.sprite.setBackgroundDrawingCallback(function()
     --     backgroundImage:draw(0, 0)
     -- end)
+
+    self.itemPath = itemPath
     local score = 0
     local tickTimer = pd.timer.new(50, self.scoreUpdater)
     tickTimer.repeats = true
@@ -31,7 +34,7 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     timeTimer = pd.timer.new(1000, self.timeUpdater)
     timeTimer.repeats = true
 
-    local offset = math.random(-30,30)
+    offset = math.random(-30,30)
     
     self.scoreGoal = goal
 
@@ -83,7 +86,7 @@ function GameScene:fillBar()
         progressPercent = 0
     end
 	self:updateProgress()
-    progressPercent -= (math.random(5,12)//2)
+    -- progressPercent -= (math.random(5,12)//2)
 end
 
 function GameScene:scoreUpdater()
@@ -97,6 +100,30 @@ function GameScene:scoreUpdater()
         end
     end
     item:updateAnimationState(score)
+
+    
+    local shakeX, shakeY
+
+    if item.width == 400 then
+        if item.itemIter == 2 then
+            shakeX = math.random(-4, 4)
+            shakeY = math.random(-1, 1)
+        elseif item.itemIter == 3 then
+            shakeX = math.random(-7, 7)
+            shakeY = math.random(-3, 3)
+        else
+            shakeX = 0
+            shakeY = 0
+        end
+        progressSprite:moveTo(375 + shakeX, 120 + shakeY)
+        infillSprite:moveTo(375 + shakeX, 120 + shakeY)
+        surroundSprite:moveTo( 375+ shakeX, 120 + shakeY )
+        targetArrow:moveTo(354 + shakeX,(120-(offset*2)) + shakeY)
+
+    end
+
+    
+    
 end
 
 function GameScene:update()
