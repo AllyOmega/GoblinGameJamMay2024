@@ -12,10 +12,11 @@ local sceneList = {
                     ["images/tv"] = {42, 58, 150},
                     ["images/house"] = {44, 56, 175},
                     ["images/mountain"] = {45, 55, 200},
-                    ["images/earth"] = {48, 54, 250}}
+                    ["images/earth"] = {48, 54, 250},
+                    ["images/screen"] = {49, 52, 300}}
 local iterator = 1
 
-local sceneKeys = {"images/cup", "images/phone", "images/tv", "images/house", "images/mountain", "images/earth"}
+local sceneKeys = {"images/cup", "images/phone", "images/tv", "images/house", "images/mountain", "images/earth", "images/screen"}
 
 
 class('SceneManager').extends()

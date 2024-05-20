@@ -23,8 +23,11 @@ function Item:init(x, y, itemPath, goal)
     self:setImage(self.itemImages[1])
     self:moveTo(x, y)
     self:add()  -- Add the sprite to the sprite system
-    self:setScale(3)
-
+    if itemPath == "images/screen" then
+        self:setScale(1)
+    else
+        self:setScale(3)
+    end
     self.centerX = x
     self.centerY = y
     self.itemIter = 1

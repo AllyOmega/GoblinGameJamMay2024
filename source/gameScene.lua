@@ -55,9 +55,11 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     assert( targetArrow )
     targetArrow:moveTo(354,(120-(offset*2)))
     targetArrow:add()
-
-    item = Item(centerX+20, centerY+15, itemPath, self.scoreGoal)
-
+    if itemPath == "images/screen" then
+        item = Item(centerX, centerY, itemPath, self.scoreGoal)
+    else
+        item = Item(centerX+20, centerY+15, itemPath, self.scoreGoal)
+    end
     targetRangeMin = rangeMin + offset
     targetRangeMax = rangeMax + offset
 
@@ -66,8 +68,6 @@ end
 
 function GameScene:timeUpdater()
     timeElapsed += 1
-
-   --print("timeTimer: " .. tostring(timeElapsed))
 end
 
 function GameScene:updateProgress()
@@ -103,30 +103,30 @@ function GameScene:update()
     self:fillBar()
     if score >= self.scoreGoal then
         timeTimer:pause()
-        --print("time before: " .. tostring(timeElapsed))
        if score <= (self.scoreGoal + 10) then
-            local text1 = "GET Fracked"
-            local gameTitleImage1 = gfx.image.new(gfx.getTextSize(text1))
-            gfx.pushContext(gameTitleImage1)
-                gfx.drawText(text1, 0, 0)
-            gfx.popContext()
-            local gameTitleSprite1 = gfx.sprite.new(gameTitleImage1)
-            gameTitleSprite1:moveTo(165, 30)
-            gameTitleSprite1:setZIndex(10001)
-            gameTitleSprite1:add()
+            if not(itemPath == "images/screen") then
+                local text1 = "GET Fracked"
+                local gameTitleImage1 = gfx.image.new(gfx.getTextSize(text1))
+                gfx.pushContext(gameTitleImage1)
+                    gfx.drawText(text1, 0, 0)
+                gfx.popContext()
+                local gameTitleSprite1 = gfx.sprite.new(gameTitleImage1)
+                gameTitleSprite1:moveTo(165, 30)
+                gameTitleSprite1:setZIndex(10001)
+                gameTitleSprite1:add()
 
-            local text3 = "Press A"
-            local gameTitleImage3 = gfx.image.new(gfx.getTextSize(text3))
-            gfx.pushContext(gameTitleImage3)
-                gfx.drawText(text3, 0, 0)
-            gfx.popContext()
-            local gameTitleSprite3 = gfx.sprite.new(gameTitleImage3)
-            gameTitleSprite3:setScale(.5)
-            gameTitleSprite3:moveTo(55, 210)
-            gameTitleSprite3:setZIndex(10002)
-            gameTitleSprite3:add()
-            --print("time after: " .. tostring(timeElapsed))
-       end
+                local text3 = "Press A"
+                local gameTitleImage3 = gfx.image.new(gfx.getTextSize(text3))
+                gfx.pushContext(gameTitleImage3)
+                    gfx.drawText(text3, 0, 0)
+                gfx.popContext()
+                local gameTitleSprite3 = gfx.sprite.new(gameTitleImage3)
+                gameTitleSprite3:setScale(.5)
+                gameTitleSprite3:moveTo(55, 210)
+                gameTitleSprite3:setZIndex(10002)
+                gameTitleSprite3:add()
+            end
+        end
        score =  self.scoreGoal + 1000
        if pd.buttonJustPressed(pd.kButtonA) then
            SCENE_MANAGER:switchScene(timeElapsed)
