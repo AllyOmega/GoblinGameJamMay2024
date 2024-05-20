@@ -34,7 +34,7 @@ function Item:init(x, y, itemPath, goal)
 end
 
 function Item:updateAnimationState(score)
-    if score < self.scoreGoal/4 then
+    if score < self.scoreGoal/5 then
         self.itemIter = 1
     elseif score < self.scoreGoal*(2/3) then
         self.itemIter = 2

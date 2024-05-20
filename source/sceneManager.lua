@@ -7,11 +7,11 @@ local fontPaths = {[gfx.font.kVariantNormal] = "fonts/GlitchGoblin"}
 gfx.setFont(gfx.font.new("fonts/GlitchGoblin"))
 
 local sceneList = {
-                    ["images/cup"] = {30, 70, 100},
-                    ["images/phone"] = {35, 65, 125} ,
-                    ["images/tv"] = {40, 60, 150},
-                    ["images/house"] = {42, 58, 175},
-                    ["images/mountain"] = {44, 56, 200},
+                    ["images/cup"] = {35, 65, 150},
+                    ["images/phone"] = {40, 60, 150} ,
+                    ["images/tv"] = {42, 58, 150},
+                    ["images/house"] = {44, 56, 175},
+                    ["images/mountain"] = {45, 55, 200},
                     ["images/earth"] = {48, 54, 250}}
 local iterator = 1
 

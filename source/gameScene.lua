@@ -31,7 +31,7 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     timeTimer = pd.timer.new(1000, self.timeUpdater)
     timeTimer.repeats = true
 
-    local offset = math.random(-25,25)
+    local offset = math.random(-30,30)
     
     self.scoreGoal = goal
 
@@ -53,7 +53,7 @@ function GameScene:init(itemPath, rangeMin, rangeMax, goal)
     local arrowImg = gfx.image.new('images/arrow')
     targetArrow = gfx.sprite.new(arrowImg)
     assert( targetArrow )
-    targetArrow:moveTo(354,(120-offset))
+    targetArrow:moveTo(354,(120-(offset*2)))
     targetArrow:add()
 
     item = Item(centerX+20, centerY+15, itemPath, self.scoreGoal)
@@ -91,7 +91,7 @@ function GameScene:scoreUpdater()
         score += 4
     else
         if score >= 5 then
-            score -= 1
+           --score -= 1
         else
             score = 0
         end
